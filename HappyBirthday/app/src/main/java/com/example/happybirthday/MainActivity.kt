@@ -8,6 +8,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -16,9 +17,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -54,6 +57,7 @@ fun GreetingText(message: String, from: String, modifier: Modifier = Modifier) {
         Text(
             text = message,
             fontSize = 100.sp,
+            fontStyle = FontStyle.Italic,
             lineHeight = 116.sp,
             textAlign = TextAlign.Center
         )
@@ -68,11 +72,40 @@ fun GreetingText(message: String, from: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
+fun GiftImages(gift: Int, modifier: Modifier = Modifier){
+    val giftImage = painterResource(gift)
+    Row(
+        horizontalArrangement = Arrangement.SpaceAround,
+        modifier = modifier
+    ) {
+        ConfetiImage()
+        Image(
+            painter = giftImage,
+            contentDescription = stringResource(R.string.gift_box_description),
+        )
+        ConfetiImage(rotation = 180F)
+    }
+}
+
+@Composable
+fun ConfetiImage(modifier: Modifier = Modifier, rotation: Float = 0.0F){
+    val confetiImage = painterResource(R.drawable.confeti)
+    Image(
+        painter = confetiImage,
+        contentDescription = null,
+        modifier = modifier
+            .graphicsLayer {
+                this.rotationY = rotation
+            }
+    )
+}
+
+@Composable
 fun GreetingImage(message: String, from: String, modifier: Modifier = Modifier) {
-    val image = painterResource(R.drawable.androidparty)
+    val backgroundImage = painterResource(R.drawable.androidparty)
     Box(modifier) {
         Image(
-            painter = image,
+            painter = backgroundImage,
             //contentDescription is used for accessibility reasons
             //in this case the decorative image is not meant to be described
             //if described, it could make TalkBack less efficient
@@ -80,13 +113,25 @@ fun GreetingImage(message: String, from: String, modifier: Modifier = Modifier) 
             contentScale = ContentScale.Crop,
             alpha = 0.5F
         )
-        GreetingText(
-            message = message,
-            from = from,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp)
-        )
+        Column (
+            verticalArrangement = Arrangement.Center,
+            modifier = modifier.fillMaxSize()
+        ) {
+            GreetingText(
+                message = message,
+                from = from,
+                modifier = Modifier
+                    .padding(8.dp)
+            )
+//            GiftImages(
+//                gift = R.drawable.gift,
+//                modifier = modifier.align(alignment = Alignment.CenterHorizontally)
+//            )
+            GiftImages(
+                gift = R.drawable.cat,
+                modifier = modifier.align(alignment = Alignment.CenterHorizontally)
+            )
+        }
     }
 }
 
