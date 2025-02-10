@@ -8,7 +8,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -28,19 +28,41 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ComposeArticleTheme {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize()
-                ) { innerPadding ->
-                    Article(
-                        title = R.string.Main_Article_Title,
-                        description = R.string.Jetpack_Compose_Description,
-                        body = R.string.tutorial_body,
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                Article(
+                    title = R.string.Main_Article_Title,
+                    description = R.string.Jetpack_Compose_Description,
+                    body = R.string.tutorial_body
+                )
             }
         }
     }
+}
+
+//reusable for other titles, could also add for it to be bold
+@Composable
+fun Title(
+    @StringRes title: Int,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = stringResource(title),
+        modifier = modifier,
+        fontSize = 24.sp,
+    )
+}
+
+//would be used for anything that is longer than a line
+@Composable
+fun LargeText(
+    @StringRes body: Int,
+    modifier: Modifier = Modifier
+)
+{
+    Text(
+        text = stringResource(body),
+        textAlign = TextAlign.Justify,
+        modifier = modifier
+    )
 }
 
 @Composable
@@ -53,25 +75,24 @@ fun Article(
     val headerImage = painterResource(R.drawable.bg_compose_background)
 
     Column(
-        verticalArrangement = Arrangement.Top,
-        modifier = modifier.padding(16.dp)
+        verticalArrangement = Arrangement.Top
     ) {
         Image(
             painter = headerImage,
             contentDescription = null,
-            modifier = modifier
+            modifier = Modifier.fillMaxWidth()
         )
-        Text(
-            text = stringResource(title),
-            fontSize = 24.sp
+        Title(
+            title = title,
+            modifier = modifier.padding(16.dp)
         )
-        Text(
-            text = stringResource(description),
-            textAlign = TextAlign.Justify
+        LargeText(
+            body = description,
+            modifier = modifier.padding(start = 16.dp, end = 16.dp)
         )
-        Text(
-            text = stringResource(body),
-            textAlign = TextAlign.Justify
+        LargeText(
+            body = body,
+            modifier = modifier.padding(16.dp)
         )
     }
 }
